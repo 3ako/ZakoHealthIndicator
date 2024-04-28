@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "zakohealthindicator",
+  "version": "${version}",
+  "name": "ZakoHealthIndicator",
+  "description": "",
+  "authors": ["Matvey Slotvinskiy"],
+  "mixins": [
+    "zakohealthindicator/mixins.json"
+  ],
+  "contact": {
+    "repo": "https://github.com/mslot/ZakoHealthIndicator"
+  },
+  "license": "All-Rights-Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "hw.zako.zakohealthindicator.client.ZakoHealthIndicatorClient"
+    ],
+    "main": [
+      "hw.zako.zakohealthindicator.ZakoHealthIndicator"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
