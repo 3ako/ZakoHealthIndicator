@@ -3,7 +3,7 @@ package hw.zako.zakohealthindicator.client.ui;
 import hw.zako.zakohealthindicator.util.ColorUtil;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -35,7 +35,7 @@ public class HealthBarGUI {
         return System.currentTimeMillis() - this.lastAttack;
     }
 
-    public void render(DrawContext context) {
+    public void render(MatrixStack context) {
         if (getLeft() > 10000) return;
         if (this.player == null) return;
         int health = (int) player.getHealth();
@@ -43,15 +43,14 @@ public class HealthBarGUI {
         String text = ColorUtil.getColor(health)+""+health;
 
         final var textW = client.textRenderer.getWidth(text);
-        context.getMatrices().push();
+        context.push();
         float scale = health < 10 ? 2 : 1;
         final int h = (int) (client.getWindow().getScaledHeight()/(scale*2));
         final int w = (int) (client.getWindow().getScaledWidth()/(scale*2)- textW/2);
 
-
         if (scale > 1)
-            context.getMatrices().scale(scale, scale, scale);
-        context.drawText(client.textRenderer, Text.literal(text), w, h+4, 0xFFFF0000, true);
-        context.getMatrices().pop();
+            context.scale(scale, scale, scale);
+        client.textRenderer.drawWithShadow(context,text, w, h+4, 0xFFFF0000);
+        context.pop();
     }
 }
