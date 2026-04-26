@@ -2,17 +2,18 @@ package me.zyouime.zakohealthindicator.render;
 
 import me.zyouime.zakohealthindicator.config.ModConfig;
 import me.zyouime.zakohealthindicator.util.ColorUtil;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import org.joml.Matrix3x2fStack;
 
 public class HealthHudRender {
 
@@ -28,7 +29,13 @@ public class HealthHudRender {
     }
 
     public void register() {
-        HudElementRegistry.addFirst(Identifier.of("zakohealthindicator", "health_render"), this::render);
+        HudLayerRegistrationCallback.EVENT.register(layeredDrawer ->
+            layeredDrawer.attachLayerAfter(
+                IdentifiedLayer.MISC_OVERLAYS,
+                Identifier.of("zakohealthindicator", "health_render"),
+                this::render
+            )
+        );
         AttackEntityCallback.EVENT.register(((playerEntity, world, hand, entity, entityHitResult) -> {
             if (entity.getType() != EntityType.PLAYER) {
                 lastAttack = 0;
@@ -61,13 +68,13 @@ public class HealthHudRender {
         int x = (int) (windowWidth * config.relativeX);
         int y = (int) (windowHeight * config.relativeY);
         float scale = health < 10 ? config.lowHpScale : config.normalScale;
-        Matrix3x2fStack matrixStack = context.getMatrices();
-        matrixStack.pushMatrix();
-        matrixStack.translate(x, y);
-        matrixStack.scale(scale);
-        matrixStack.translate(-x, -y);
+        MatrixStack matrixStack = context.getMatrices();
+        matrixStack.push();
+        matrixStack.translate(x, y, 0);
+        matrixStack.scale(scale, scale, 1);
+        matrixStack.translate(-x, -y, 0);
         context.drawTextWithShadow(client.textRenderer, text, x - textWidth, y - textHeight, -1);
-        matrixStack.popMatrix();
+        matrixStack.pop();
 
     }
 
