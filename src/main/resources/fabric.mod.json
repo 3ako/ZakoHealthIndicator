@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "zakohealthindicator",
+  "version": "${version}",
+  "name": "ZakoHealthIndicator",
+  "description": ":D",
+  "authors": ["_3AKO_", "zyouime13"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/zakohealthindicator/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "me.zyouime.zakohealthindicator.Main"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
