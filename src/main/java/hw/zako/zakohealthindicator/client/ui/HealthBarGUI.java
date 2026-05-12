@@ -1,55 +1,49 @@
 package hw.zako.zakohealthindicator.client.ui;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import hw.zako.zakohealthindicator.util.ColorUtil;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 
 public class HealthBarGUI {
 
-    private MinecraftClient client;
+    private final Minecraft client;
     private long lastAttack = 0;
-    private PlayerEntity player = null;
+    private Player player = null;
 
-    public HealthBarGUI(MinecraftClient client) {
+    public HealthBarGUI(Minecraft client) {
         this.client = client;
+    }
 
-        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (entity.getType() != EntityType.PLAYER) {
-                lastAttack = 0;
-                return ActionResult.PASS;
-            }
-            lastAttack = System.currentTimeMillis();
-            if (this.player != entity) {
-                this.player = (PlayerEntity) entity;
-            }
-            return ActionResult.PASS;
-        });
+    public void onAttack(Player target) {
+        this.lastAttack = System.currentTimeMillis();
+        this.player = target;
+    }
+
+    public void reset() {
+        this.lastAttack = 0;
     }
 
     private long getLeft() {
         return System.currentTimeMillis() - this.lastAttack;
     }
 
-    public void render(MatrixStack context) {
+    public void render(PoseStack context) {
         if (getLeft() > 10000) return;
         if (this.player == null) return;
         int health = (int) player.getHealth();
 
-        String text = ColorUtil.getColor(health)+""+health;
+        String text = ColorUtil.getColor(health) + "" + health;
 
-        final var textW = client.textRenderer.getWidth(text);
-        context.push();
+        final int textW = client.font.width(text);
+        context.pushPose();
         float scale = health < 10 ? 2 : 1;
-        final int h = (int) (client.getWindow().getScaledHeight()/(scale*2));
-        final int w = (int) (client.getWindow().getScaledWidth()/(scale*2)- textW/2);
+        final int h = (int) (client.getWindow().getGuiScaledHeight() / (scale * 2));
+        final int w = (int) (client.getWindow().getGuiScaledWidth() / (scale * 2) - textW / 2);
 
         if (scale > 1)
             context.scale(scale, scale, scale);
-        client.textRenderer.drawWithShadow(context,text, w, h+4, 0xFFFF0000);
-        context.pop();
+        client.font.drawShadow(context, text, w, h + 4, 0xFFFF0000);
+        context.popPose();
     }
 }

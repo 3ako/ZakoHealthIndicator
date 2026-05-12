@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All-Rights-Reserved"
+issueTrackerURL="https://github.com/mslot/ZakoHealthIndicator/issues"
+
+[[mods]]
+modId="zakohealthindicator"
+version="${version}"
+displayName="ZakoHealthIndicator"
+authors="Matvey Slotvinskiy"
+description='''
+Shows player health on nameplate and a HUD bar after attacking.
+'''
+
+[[dependencies.zakohealthindicator]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.zakohealthindicator]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="CLIENT"

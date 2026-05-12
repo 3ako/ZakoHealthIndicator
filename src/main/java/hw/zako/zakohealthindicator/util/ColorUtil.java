@@ -1,21 +1,21 @@
 package hw.zako.zakohealthindicator.util;
 
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 
 public class ColorUtil {
-    public static Formatting getColor(float health) {
+    public static ChatFormatting getColor(float health) {
         if (health <= 5.0f) {
-            return Formatting.RED;
+            return ChatFormatting.RED;
         }
         if (health <= 10.0f) {
-            return Formatting.GOLD;
+            return ChatFormatting.GOLD;
         }
         if (health <= 15.0f) {
-            return Formatting.YELLOW;
+            return ChatFormatting.YELLOW;
         }
         if (health <= 20.0f) {
-            return Formatting.GREEN;
+            return ChatFormatting.GREEN;
         }
-        return Formatting.DARK_GREEN;
+        return ChatFormatting.DARK_GREEN;
     }
 }

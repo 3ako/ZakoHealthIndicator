@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.client.MinecraftClient;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,8 +15,7 @@ public class Config {
     private static Config instance;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private static final File CONFIG_DIR = new File(MinecraftClient.getInstance().runDirectory, "config");
-    private static final File CONFIG_FILE = new File(CONFIG_DIR, "zhindicator.json");
+    private static final File CONFIG_FILE = FMLPaths.CONFIGDIR.get().resolve("zhindicator.json").toFile();
 
     private boolean crosshair = true;
 
@@ -32,13 +31,6 @@ public class Config {
     }
 
     public Config() {
-        createConfigDirIfNeeded();
-    }
-
-    private void createConfigDirIfNeeded() {
-        if (!CONFIG_DIR.exists() && (!CONFIG_DIR.mkdirs())) {
-            return;
-        }
         loadConfig();
     }
 
@@ -51,13 +43,11 @@ public class Config {
         if (!CONFIG_FILE.exists()) {
             return;
         }
-
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             JsonObject json = GSON.fromJson(reader, JsonObject.class);
             if (json.has("crosshair")) {
                 crosshair = json.get("crosshair").getAsBoolean();
             }
-
         } catch (IOException | JsonParseException e) {
         }
     }
