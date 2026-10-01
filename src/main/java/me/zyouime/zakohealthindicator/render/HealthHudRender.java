@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Matrix3x2fStack;
 
@@ -30,7 +30,7 @@ public class HealthHudRender {
     public void register() {
         HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath("zakohealthindicator", "health_render"), this::render);
         AttackEntityCallback.EVENT.register(((playerEntity, world, hand, entity, entityHitResult) -> {
-            if (entity.getType() != EntityType.PLAYER) {
+            if (entity.getType() != EntityTypes.PLAYER) {
                 lastAttack = 0;
                 return InteractionResult.PASS;
             }
