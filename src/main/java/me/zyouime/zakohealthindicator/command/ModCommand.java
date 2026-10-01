@@ -5,10 +5,10 @@ import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.zyouime.zakohealthindicator.config.ModConfig;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class ModCommand {
 
@@ -21,50 +21,50 @@ public class ModCommand {
 
     private void register() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            dispatcher.register(ClientCommandManager.literal("zakohealthindicator")
-                    .then(ClientCommandManager.literal("toggle")
+            dispatcher.register(ClientCommands.literal("zakohealthindicator")
+                    .then(ClientCommands.literal("toggle")
                             .executes(context -> {
                                 config.enabled = !config.enabled;
                                 String text = config.enabled ? "§aМод включён" : "§cМод выключен";
                                 sendText(context, text);
                                 return 1;
                             }))
-                    .then(ClientCommandManager.literal("relativeX")
-                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(0.0f, 1.0f))
+                    .then(ClientCommands.literal("relativeX")
+                            .then(ClientCommands.argument("value", FloatArgumentType.floatArg(0.0f, 1.0f))
                                     .executes(context -> {
                                         config.relativeX = context.getArgument("value", Float.class);
                                         sendText(context, setValueText(config.relativeX));
                                         return 1;
                                     })))
-                    .then(ClientCommandManager.literal("relativeY")
-                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg(0.0f, 1.0f))
+                    .then(ClientCommands.literal("relativeY")
+                            .then(ClientCommands.argument("value", FloatArgumentType.floatArg(0.0f, 1.0f))
                                     .executes(context -> {
                                         config.relativeY = context.getArgument("value", Float.class);
                                         sendText(context, setValueText(config.relativeY));
                                         return 1;
                                     })))
-                    .then(ClientCommandManager.literal("normalScale")
-                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
+                    .then(ClientCommands.literal("normalScale")
+                            .then(ClientCommands.argument("value", FloatArgumentType.floatArg())
                                     .executes(context -> {
                                         config.normalScale = context.getArgument("value", Float.class);
                                         sendText(context, setValueText(config.normalScale));
                                         return 1;
                                     })))
-                    .then(ClientCommandManager.literal("lowHpScale")
-                            .then(ClientCommandManager.argument("value", FloatArgumentType.floatArg())
+                    .then(ClientCommands.literal("lowHpScale")
+                            .then(ClientCommands.argument("value", FloatArgumentType.floatArg())
                                     .executes(context -> {
                                         config.lowHpScale = context.getArgument("value", Float.class);
                                         sendText(context, setValueText(config.lowHpScale));
                                         return 1;
                                     })))
-                    .then(ClientCommandManager.literal("targetDelay")
-                            .then(ClientCommandManager.argument("value", LongArgumentType.longArg())
+                    .then(ClientCommands.literal("targetDelay")
+                            .then(ClientCommands.argument("value", LongArgumentType.longArg())
                                     .executes(context -> {
                                         config.targetDelay = context.getArgument("value", Long.class);
                                         sendText(context, setValueText(config.targetDelay));
                                         return 1;
                                     })))
-                    .then(ClientCommandManager.literal("help")
+                    .then(ClientCommands.literal("help")
                             .executes(context -> {
                                 String prefix = "* ";
                                 String message = prefix + "toggle - вкл/выкл мод;" + "\n" +
@@ -79,7 +79,7 @@ public class ModCommand {
                                 return 1;
                             }))
             );
-            dispatcher.register(ClientCommandManager.literal("zhi")
+            dispatcher.register(ClientCommands.literal("zhi")
                     .redirect(dispatcher.getRoot().getChild("zakohealthindicator")));
         });
     }
@@ -89,7 +89,7 @@ public class ModCommand {
     }
 
     private void sendText(CommandContext<FabricClientCommandSource> context, String text) {
-        context.getSource().sendFeedback(Text.literal(text));
+        context.getSource().sendFeedback(Component.literal(text));
         saveConfig();
     }
 

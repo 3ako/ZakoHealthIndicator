@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom") version "1.15-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.18.2"
     id("maven-publish")
 }
 
@@ -21,13 +21,12 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modApi (include("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}") {
+    implementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+    api (include("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}") {
         exclude(group = "net.fabricmc.fabric-api")
     })
-    modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    implementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
 }
 
 tasks.processResources {
@@ -45,7 +44,7 @@ tasks.processResources {
     }
 }
 
-val targetJavaVersion = 21
+val targetJavaVersion = 25
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
